@@ -1,9 +1,10 @@
 <?php
 
-namespace Delickate\UserSessions\Listeners;
+namespace Delickate\UserSessions\Src\Listeners;
+
 
 use Illuminate\Auth\Events\Logout;
-use Delickate\UserSessions\Models\UserSession;
+use Delickate\UserSessions\Src\Models\UserSession;
 
 class LogLogout
 {

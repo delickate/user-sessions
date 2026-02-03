@@ -1,13 +1,13 @@
 <?php
 
-namespace Delickate\UserSessions\Providers;
+namespace Delickate\UserSessions\Src\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
-use Delickate\UserSessions\Listeners\LogLogin;
-use Delickate\UserSessions\Listeners\LogLogout;
+use Delickate\UserSessions\Src\Listeners\LogLogin;
+use Delickate\UserSessions\Src\Listeners\LogLogout;
 
 class UserSessionsServiceProvider extends ServiceProvider
 {
