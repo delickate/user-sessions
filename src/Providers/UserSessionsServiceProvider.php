@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
+use Illuminate\Support\Facades\Event;
+use Delickate\UserSessions\Listeners\LogLogin;
+use Delickate\UserSessions\Listeners\LogLogout;
+
+class UserSessionsServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/user-sessions.php',
+            'user-sessions'
+        );
+    }
+
+    public function boot()
+    {
+        // Register event listeners
+        Event::listen(Login::class, LogLogin::class);
+        Event::listen(Logout::class, LogLogout::class);
+
+        // Load migrations automatically
+        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+        // Publish config
+        $this->publishes([
+            __DIR__ . '/../../config/user-sessions.php' =>
+                config_path('user-sessions.php'),
+        ], 'user-sessions-config');
+    }
+}

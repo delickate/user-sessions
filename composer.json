@@ -1,0 +1,27 @@
+{
+    "name": "delickate/user-sessions",
+    "description": "Log user login & logout sessions",
+    "type": "library",
+    "require": {
+        "php": "^7.3|^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Delickate\\UserSessions\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Delickate\\UserSessions\\Providers\\UserSessionsServiceProvider"
+            ]
+        }
+    },
+    "authors": [
+        {
+            "name": "Sani"
+        }
+    ]
+}
