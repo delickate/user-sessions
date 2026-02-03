@@ -1,10 +1,9 @@
 <?php
 
-namespace Delickate\UserSessions\Src\Listeners;
-
+namespace Delickate\UserSessions\Listeners;
 
 use Illuminate\Auth\Events\Login;
-use Delickate\UserSessions\Src\Models\UserSession;
+use Delickate\UserSessions\Models\UserSession;
 
 class LogLogin
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Delickate\UserSessions\Src\Models;
+namespace Delickate\UserSessions\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
