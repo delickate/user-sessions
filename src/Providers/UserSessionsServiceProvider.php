@@ -1,5 +1,8 @@
 <?php
 
+namespace Delickate\UserSessions\Providers;
+
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Support\Facades\Event;
@@ -18,7 +21,7 @@ class UserSessionsServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Register event listeners
+        // Register auth event listeners
         Event::listen(Login::class, LogLogin::class);
         Event::listen(Logout::class, LogLogout::class);
 
