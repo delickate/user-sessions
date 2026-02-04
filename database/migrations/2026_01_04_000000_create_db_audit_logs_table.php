@@ -14,10 +14,10 @@ class CreateDbAuditLogsTable extends Migration
         $table->unsignedBigInteger('user_id')->nullable()->index();
         $table->unsignedBigInteger('user_session_id')->nullable()->index();
 
-        $table->string('connection');
+        $table->string('connection')->nullable();
         $table->enum('operation', ['insert', 'update', 'delete']);
 
-        $table->string('table_name');
+        $table->string('table_name')->nullable();
 
         $table->json('before')->nullable();
         $table->json('after')->nullable();

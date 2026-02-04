@@ -14,8 +14,8 @@ class CreateUserSessionModelChangesTable extends Migration
         $table->unsignedBigInteger('user_session_id')->index();
         $table->unsignedBigInteger('user_id')->index();
 
-        $table->string('model_type');
-        $table->unsignedBigInteger('model_id');
+        $table->string('model_type')->nullable();
+        $table->unsignedBigInteger('model_id')->nullable();
 
         $table->json('before')->nullable();
         $table->json('after')->nullable();
