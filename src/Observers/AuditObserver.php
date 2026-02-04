@@ -27,6 +27,8 @@ class AuditObserver
             'before' => $model->_audit_before ?? null,
             'after' => $model->getChanges(),
         ]);
+
+        unset($model->_audit_before);
     }
 
     protected function getDirtyOriginals($model)
