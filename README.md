@@ -18,3 +18,15 @@ Clear the cache as well
 After installation, run migration command
 > php artisan migrate
 
+After installing the package, add the middleware **after auth**
+in `app/Http/Kernel.php`:
+
+'protected $middlewareGroups = [
+        'web' => [
+            ...
+            ...
+            //\Illuminate\Auth\Middleware\Authenticate::class,
+            'user.sessions',
+        ],
+
+],

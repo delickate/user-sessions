@@ -11,6 +11,11 @@ use Delickate\UserSessions\Listeners\LogLogout;
 
 use Illuminate\Routing\Router;
 use Delickate\UserSessions\Middleware\LogUserActivity;
+use Delickate\UserSessions\Observers\AuditObserver;
+
+use Illuminate\Support\Facades\DB;
+use Delickate\UserSessions\Models\UserSession;
+use Delickate\UserSessions\Models\DbAuditLog;
 
 class UserSessionsServiceProvider extends ServiceProvider
 {
@@ -44,5 +49,57 @@ class UserSessionsServiceProvider extends ServiceProvider
         //$router->appendMiddlewareToGroup('web', LogUserActivity::class);
         $router->aliasMiddleware('user.sessions', LogUserActivity::class);
 
+        //SANI: loging audit trail for specific models
+        foreach (config('user-sessions.audit_models', []) as $model) 
+        {
+            $model::observe(AuditObserver::class);
+        }
+
+        //SANI: Query logs
+        DB::listen(function ($query) {
+            $this->logQuery($query);
+        });
+
     }
+
+    protected function logQuery($query)
+    {
+        $sql = strtolower(trim($query->sql));
+
+        if (!preg_match('/^(insert|update|delete)/', $sql, $matches)) {
+            return; // ignore selects
+        }
+
+        $operation = $matches[1];
+        $table = $this->extractTableName($sql, $operation);
+
+        $userId = auth()->id();
+        $session = session()->getId()
+            ? UserSession::where('session_id', session()->getId())->first()
+            : null;
+
+        DbAuditLog::create([
+            'user_id' => $userId,
+            'user_session_id' => $session?->id,
+            'connection' => $query->connectionName,
+            'operation' => $operation,
+            'table_name' => $table,
+            'sql' => $query->sql,
+            'bindings' => $query->bindings,
+            'executed_at' => now(),
+        ]);
+    }
+
+
+    protected function extractTableName($sql, $operation)
+    {
+        return match ($operation) {
+            'insert' => preg_replace('/insert into\s+([^\s]+)/', '$1', $sql),
+            'update' => preg_replace('/update\s+([^\s]+)/', '$1', $sql),
+            'delete' => preg_replace('/delete from\s+([^\s]+)/', '$1', $sql),
+            default => null,
+        };
+    }
+
+
 }

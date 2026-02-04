@@ -71,4 +71,15 @@ return [
         'middleware' => ['web', 'auth'],
     ],
 
+    'audit_models' => [
+                        App\Models\User::class,
+                        
+                      ],
+
+    $ignoreTables = [
+                        'sessions',
+                        'db_audit_logs',
+                        'cache',
+                    ];
+
 ];
