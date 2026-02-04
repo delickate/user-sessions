@@ -49,11 +49,54 @@ class UserSessionsServiceProvider extends ServiceProvider
             );
         }
 
-        // Publish config
+        //publish all
         $this->publishes([
-            __DIR__ . '/../../config/user-sessions.php' =>
-                config_path('user-sessions.php'),
-        ], 'user-sessions-config');
+        // Config
+        __DIR__.'/../../config/user-sessions.php' =>
+            config_path('user-sessions.php'),
+
+        // Controllers
+        __DIR__.'/../../stubs/controllers' =>
+            app_path('Http/Controllers/UserSessions'),
+
+        // Views
+        __DIR__.'/../../stubs/views' =>
+            resource_path('views/user-sessions'),
+
+        // Routes
+        __DIR__.'/../../stubs/routes/user-sessions.php.stub' =>
+            base_path('routes/user-sessions.php'),
+
+    ], 'user-sessions');
+        
+        // Publish config
+        // $this->publishes([
+        //     __DIR__ . '/../../config/user-sessions.php' =>
+        //         config_path('user-sessions.php'),
+        // ], 'user-sessions-config');
+
+
+
+        // // Controllers
+        // $this->publishes([
+        //     __DIR__.'/../../stubs/controllers' =>
+        //         app_path('Http/Controllers/UserSessions'),
+        // ], 'user-sessions-controllers');
+
+        // // Views
+        // $this->publishes([
+        //     __DIR__.'/../../stubs/views' =>
+        //         resource_path('views/user-sessions'),
+        // ], 'user-sessions-views');
+
+
+        // // Routes
+        // $this->publishes([
+        //     __DIR__.'/../../stubs/routes/user-sessions.php.stub' =>
+        //         base_path('routes/user-sessions.php'),
+        // ], 'user-sessions-routes');
+
+
 
         // Middleware alias
         $router = $this->app['router'];

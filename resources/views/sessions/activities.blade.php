@@ -1,1 +1,0 @@
-activities.blade.php

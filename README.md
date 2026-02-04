@@ -33,5 +33,6 @@ in `app/Http/Kernel.php`:
 
 After installation publish the files as well
 
-> php artisan vendor:publish --tag=user-sessions-config
+> php artisan vendor:publish --tag=user-sessions
+
 

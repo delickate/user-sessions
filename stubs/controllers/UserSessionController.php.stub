@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Http\Controllers\UserSessions;
+
+use App\Http\Controllers\Controller;
+use Delickate\UserSessions\Models\UserSession;
+
+class UserSessionController extends Controller
+{
+    public function index()
+    {
+        $sessions = UserSession::latest()->paginate(20);
+        return view('user-sessions.sessions.index', compact('sessions'));
+    }
+}
