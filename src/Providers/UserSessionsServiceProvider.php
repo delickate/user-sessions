@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Event;
 use Delickate\UserSessions\Listeners\LogLogin;
 use Delickate\UserSessions\Listeners\LogLogout;
 
+use Illuminate\Routing\Router;
+use Delickate\UserSessions\Middleware\LogUserActivity;
+
 class UserSessionsServiceProvider extends ServiceProvider
 {
     public function register()
@@ -21,12 +24,15 @@ class UserSessionsServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        // Register auth event listeners
+        //SANI: Register auth event listeners
         Event::listen(Login::class, LogLogin::class);
         Event::listen(Logout::class, LogLogout::class);
 
-        // Load migrations automatically
+        //SANI: Load migrations automatically
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+
+        //SANI: push middleware for browsing logs
+        $router->pushMiddlewareToGroup('web', LogUserActivity::class);
 
         // Publish config
         $this->publishes([
