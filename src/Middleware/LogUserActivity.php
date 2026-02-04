@@ -40,6 +40,9 @@ class LogUserActivity
             'hit_at' => now(),
         ]);
 
+        session()->put('current_user_session_id', $session->id);
+
+
         return $response;
     }
 
