@@ -22,7 +22,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot(Router $router)
+    public function boot()
     {
         //SANI: Register auth event listeners
         Event::listen(Login::class, LogLogin::class);
@@ -31,13 +31,16 @@ class UserSessionsServiceProvider extends ServiceProvider
         //SANI: Load migrations automatically
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
-        //SANI: push middleware for browsing logs
-        $router->pushMiddlewareToGroup('web', LogUserActivity::class);
-
+        
         // Publish config
         $this->publishes([
             __DIR__ . '/../../config/user-sessions.php' =>
                 config_path('user-sessions.php'),
         ], 'user-sessions-config');
+
+
+        //SANI: push middleware for browsing logs
+        $router = $this->app['router'];
+        $router->pushMiddlewareToGroup('web', LogUserActivity::class);
     }
 }

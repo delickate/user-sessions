@@ -15,4 +15,6 @@ Clear the cache as well
 > php artisan optimize:clear
 
 
+After installation, run migration command
+> php artisan migrate
 
