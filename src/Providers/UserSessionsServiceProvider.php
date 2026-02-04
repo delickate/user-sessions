@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Delickate\UserSessions\Models\UserSession;
 use Delickate\UserSessions\Models\DbAuditLog;
 use Delickate\UserSessions\Observers\AuditObserver;
+use Delickate\UserSessions\Middleware\StoreUserSessionId;
 
 
 
@@ -48,6 +49,8 @@ class UserSessionsServiceProvider extends ServiceProvider
         // Middleware alias
         $router = $this->app['router'];
         $router->aliasMiddleware('user.sessions', LogUserActivity::class);
+        $router->aliasMiddleware('store.user.session', StoreUserSessionId::class);
+
 
         // Query listener for audit logs
 

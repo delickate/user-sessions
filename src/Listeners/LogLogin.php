@@ -13,14 +13,18 @@ class LogLogin
             return;
         }
 
+        $sessionId = session()->getId();
 
-        UserSession::create([
+
+        $userSession = UserSession::create([
             'user_id' => $event->user->id,
             'login_at' => now(),
-            'session_id' => session()->getId(),
+            //'session_id' => $sessionId,
             'session_date' => now()->toDateString(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
+
+        session()->put('current_user_session_id', $userSession->id);
     }
 }
