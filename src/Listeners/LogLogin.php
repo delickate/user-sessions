@@ -17,6 +17,7 @@ class LogLogin
         UserSession::create([
             'user_id' => $event->user->id,
             'login_at' => now(),
+            'session_id' => session()->getId(),
             'session_date' => now()->toDateString(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),

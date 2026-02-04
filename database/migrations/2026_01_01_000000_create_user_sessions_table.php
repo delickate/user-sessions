@@ -14,7 +14,7 @@ class CreateUserSessionsTable extends Migration
             $table->unsignedBigInteger('user_id')->index();
             $table->timestamp('login_at')->nullable();
             $table->timestamp('logout_at')->nullable();
-
+            $table->string('session_id')->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
 

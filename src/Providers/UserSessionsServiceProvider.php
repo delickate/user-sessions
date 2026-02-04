@@ -41,6 +41,8 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         //SANI: push middleware for browsing logs
         $router = $this->app['router'];
-        $router->pushMiddlewareToGroup('web', LogUserActivity::class);
+        //$router->pushMiddlewareToGroup('web', LogUserActivity::class);
+        $router->appendMiddlewareToGroup('web', LogUserActivity::class);
+
     }
 }
