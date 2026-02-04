@@ -22,7 +22,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         );
     }
 
-    public function boot()
+    public function boot(Router $router)
     {
         //SANI: Register auth event listeners
         Event::listen(Login::class, LogLogin::class);
