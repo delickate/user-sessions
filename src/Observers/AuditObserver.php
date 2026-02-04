@@ -6,6 +6,9 @@ use Delickate\UserSessions\Models\DbAuditLog;
 use Illuminate\Support\Facades\Auth;
 use Delickate\UserSessions\Models\UserSession;
 
+
+use Illuminate\Support\Facades\DB;
+
 class AuditObserver
 {
     /**
@@ -46,19 +49,29 @@ class AuditObserver
     protected function logAudit($model, $operation)
     {
         // Get current user
-        $userId = Auth::id();
-        $session = session()->getId()
-            ? UserSession::where('session_id', session()->getId())->first()
-            : null;
+        //$userId = Auth::id();
+        // $session = session()->getId()
+        //     ? UserSession::where('session_id', session()->getId())->first()
+        //     : null;
+
+        $userId = auth()->id();
+        $session = UserSession::where('session_id', session()->getId())->first();
+
+        // DB::listen(function ($query) {
+        //     $sql = $query->sql;
+        //     $bindings = $query->bindings;
+        //     $connection = $query->connectionName;
+        // });
 
         DbAuditLog::create([
             'user_id' => $userId,
             'user_session_id' => $session?->id,
+            'connection' => $model->getConnectionName() ?? config('database.default'),
             'table_name' => $model->getTable(),
             'operation' => $operation,
             'before' => $model->_audit_before ?? null,
             'after' => $operation === 'update' ? $model->getChanges() : null,
-            'sql' => null, // optional, only for raw queries
+            'sql' => null, 
             'bindings' => null,
             'executed_at' => now(),
         ]);

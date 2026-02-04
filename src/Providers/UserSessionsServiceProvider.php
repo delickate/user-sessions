@@ -56,6 +56,12 @@ class UserSessionsServiceProvider extends ServiceProvider
             }
         }
 
+
+        // foreach (config('user-sessions.models', []) as $model) 
+        // {
+        //     $model::observe(ModelObserver::class);
+        // }
+
         // DB::listen(function ($query) {
         //     $this->logQuery($query);
         // });
