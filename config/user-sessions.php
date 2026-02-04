@@ -76,10 +76,6 @@ return [
                         
                       ],
 
-    $ignoreTables = [
-                        'sessions',
-                        'db_audit_logs',
-                        'cache',
-                    ];
+    
 
 ];
