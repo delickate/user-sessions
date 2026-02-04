@@ -17,6 +17,8 @@ use Delickate\UserSessions\Models\UserSession;
 use Delickate\UserSessions\Models\DbAuditLog;
 use Delickate\UserSessions\Observers\AuditObserver;
 
+
+
 class UserSessionsServiceProvider extends ServiceProvider
 {
     public function register()

@@ -8,6 +8,7 @@ use Delickate\UserSessions\Models\UserSession;
 
 
 use Illuminate\Support\Facades\DB;
+use Delickate\UserSessions\Models\UserSessionActivity;
 
 class AuditObserver
 {
@@ -55,7 +56,8 @@ class AuditObserver
         //     : null;
 
         $userId = auth()->id();
-        $session = UserSession::where('session_id', session()->getId())->first();
+        $activity = UserSessionActivity::where('session_id', session()->getId())->latest()->first();
+
 
         // DB::listen(function ($query) {
         //     $sql = $query->sql;
@@ -65,7 +67,7 @@ class AuditObserver
 
         DbAuditLog::create([
             'user_id' => $userId,
-            'user_session_id' => $session?->id,
+            'user_session_id' => $activity?->user_session_id,
             'connection' => $model->getConnectionName() ?? config('database.default'),
             'table_name' => $model->getTable(),
             'operation' => $operation,
