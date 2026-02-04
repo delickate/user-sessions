@@ -40,6 +40,15 @@ class UserSessionsServiceProvider extends ServiceProvider
         // Load migrations automatically
         $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
 
+        if (config('user-sessions.ui.enabled')) 
+        {
+            $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+            $this->loadViewsFrom(
+                __DIR__ . '/../../resources/views',
+                'user-sessions'
+            );
+        }
+
         // Publish config
         $this->publishes([
             __DIR__ . '/../../config/user-sessions.php' =>
