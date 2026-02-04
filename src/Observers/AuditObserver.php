@@ -56,7 +56,7 @@ class AuditObserver
         //     : null;
 
         $userId = auth()->id();
-        $activity = UserSessionActivity::where('session_id', session()->getId())->latest()->first();
+        $activity = UserSessionActivity::where('user_session_id', session()->getId())->latest()->first();
 
 
         // DB::listen(function ($query) {
