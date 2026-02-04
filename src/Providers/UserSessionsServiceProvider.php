@@ -16,9 +16,8 @@ class UserSessionsServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__ . '/../../config/user-sessions.php',
-            'user-sessions'
+        //SANI: load config
+        $this->mergeConfigFrom(__DIR__ . '/../../config/user-sessions.php', 'user-sessions'
         );
     }
 
@@ -42,7 +41,8 @@ class UserSessionsServiceProvider extends ServiceProvider
         //SANI: push middleware for browsing logs
         $router = $this->app['router'];
         //$router->pushMiddlewareToGroup('web', LogUserActivity::class);
-        $router->appendMiddlewareToGroup('web', LogUserActivity::class);
+        //$router->appendMiddlewareToGroup('web', LogUserActivity::class);
+        $router->aliasMiddleware('user.sessions', LogUserActivity::class);
 
     }
 }
