@@ -24,7 +24,7 @@ class AuditObserver
             'user_id' => auth()->id(),
             'model_type' => get_class($model),
             'model_id' => $model->getKey(),
-            //'before' => $model->_audit_before ?? null,
+            'before' => $model->_audit_before ?? null,
             'after' => $model->getChanges(),
         ]);
 
