@@ -15,6 +15,7 @@ use Delickate\UserSessions\Middleware\LogUserActivity;
 use Illuminate\Support\Facades\DB;
 use Delickate\UserSessions\Models\UserSession;
 use Delickate\UserSessions\Models\DbAuditLog;
+use Delickate\UserSessions\Observers\AuditObserver;
 
 class UserSessionsServiceProvider extends ServiceProvider
 {
@@ -47,9 +48,17 @@ class UserSessionsServiceProvider extends ServiceProvider
         $router->aliasMiddleware('user.sessions', LogUserActivity::class);
 
         // Query listener for audit logs
-        DB::listen(function ($query) {
-            $this->logQuery($query);
-        });
+
+        foreach (config('user-sessions.audit_models', []) as $modelClass) 
+        {
+            if (class_exists($modelClass)) {
+                $modelClass::observe(AuditObserver::class);
+            }
+        }
+
+        // DB::listen(function ($query) {
+        //     $this->logQuery($query);
+        // });
     }
 
     protected function logQuery($query)
@@ -91,8 +100,8 @@ class UserSessionsServiceProvider extends ServiceProvider
             'connection' => $query->connectionName,
             'operation' => $operation,
             'table_name' => $table,
-            'before' => null,   // cannot capture without triggers or model observer
-            'after' => null,    // cannot capture without triggers or model observer
+            'before' => null,   
+            'after' => null,   
             'sql' => $query->sql,
             'bindings' => json_encode($query->bindings),
             'executed_at' => now(),

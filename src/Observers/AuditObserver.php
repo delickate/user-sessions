@@ -1,44 +1,69 @@
-<?php 
+<?php
 
 namespace Delickate\UserSessions\Observers;
 
-use Delickate\UserSessions\Models\ModelChangeLog;
+use Delickate\UserSessions\Models\DbAuditLog;
+use Illuminate\Support\Facades\Auth;
 use Delickate\UserSessions\Models\UserSession;
 
 class AuditObserver
 {
+    /**
+     * Handle the "updating" event.
+     * Store original values temporarily
+     */
     public function updating($model)
     {
-        $model->_audit_before = $this->getDirtyOriginals($model);
+        // Store before state in memory only
+        $model->_audit_before = $model->getOriginal();
     }
 
+    /**
+     * Handle the "updated" event.
+     */
     public function updated($model)
     {
-        if (!auth()->check()) return;
-
-        $session = UserSession::where('session_id', session()->getId())->first();
-        if (!$session) return;
-
-        ModelChangeLog::create([
-            'user_session_id' => $session->id,
-            'user_id' => auth()->id(),
-            'model_type' => get_class($model),
-            'model_id' => $model->getKey(),
-            'before' => $model->_audit_before ?? null,
-            'after' => $model->getChanges(),
-        ]);
-
-        unset($model->_audit_before);
+        $this->logAudit($model, 'update');
     }
 
-    protected function getDirtyOriginals($model)
+    /**
+     * Handle the "deleting" event.
+     */
+    public function deleting($model)
     {
-        $before = [];
+        // Store before state
+        $model->_audit_before = $model->getOriginal();
+    }
 
-        foreach ($model->getDirty() as $key => $value) {
-            $before[$key] = $model->getOriginal($key);
-        }
+    /**
+     * Handle the "deleted" event.
+     */
+    public function deleted($model)
+    {
+        $this->logAudit($model, 'delete');
+    }
 
-        return $before;
+    protected function logAudit($model, $operation)
+    {
+        // Get current user
+        $userId = Auth::id();
+        $session = session()->getId()
+            ? UserSession::where('session_id', session()->getId())->first()
+            : null;
+
+        DbAuditLog::create([
+            'user_id' => $userId,
+            'user_session_id' => $session?->id,
+            'table_name' => $model->getTable(),
+            'operation' => $operation,
+            'before' => $model->_audit_before ?? null,
+            'after' => $operation === 'update' ? $model->getChanges() : null,
+            'sql' => null, // optional, only for raw queries
+            'bindings' => null,
+            'executed_at' => now(),
+        ]);
+
+        // Clean up temporary property
+        unset($model->_audit_before);
     }
 }
