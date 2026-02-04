@@ -56,8 +56,11 @@ class AuditObserver
         //     : null;
 
         $userId = auth()->id();
-        $activity = UserSessionActivity::where('user_session_id', session()->getId())->latest()->first();
+        $activity = UserSessionActivity::where('user_session_id', session()->getId())
+            ->latest()
+            ->first();
 
+        $userSessionId = $activity?->user_session_id;
 
         // DB::listen(function ($query) {
         //     $sql = $query->sql;
@@ -67,7 +70,7 @@ class AuditObserver
 
         DbAuditLog::create([
             'user_id' => $userId,
-            'user_session_id' => $activity?->user_session_id,
+            'user_session_id' => $userSessionId,
             'connection' => $model->getConnectionName() ?? config('database.default'),
             'table_name' => $model->getTable(),
             'operation' => $operation,
