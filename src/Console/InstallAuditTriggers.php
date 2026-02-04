@@ -37,9 +37,16 @@ class InstallAuditTriggers extends Command
 	        'migrations',
 	        'password_resets',
 	        'sessions',
+	        'cache',
+	        'cache_locks',
+	        'jobs',
+	        'failed_jobs',
+
+	        // audit system tables
 	        'db_audit_logs',
 	        'user_sessions',
 	        'user_session_activities',
+	        'user_session_model_changes'
 	    ]);
 	}
 

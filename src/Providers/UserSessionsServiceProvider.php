@@ -56,7 +56,8 @@ class UserSessionsServiceProvider extends ServiceProvider
         }
 
         //SANI: Query logs
-        DB::listen(function ($query) {
+        DB::listen(function ($query) 
+        {
             $this->logQuery($query);
         });
 
@@ -66,8 +67,24 @@ class UserSessionsServiceProvider extends ServiceProvider
     {
         $sql = strtolower(trim($query->sql));
 
-        if (!preg_match('/^(insert|update|delete)/', $sql, $matches)) {
+        //if (!preg_match('/^(insert|update|delete)/', $sql, $matches)) 
+        if (!preg_match('/^(update|delete)/', $sql, $matches)) 
+        {
             return; // ignore selects
+        }
+
+        if (str_contains($sql, 'db_audit_logs') ||
+            str_contains($sql, 'migrations') ||
+            str_contains($sql, 'cache') ||
+            str_contains($sql, 'cache_locks') ||
+            str_contains($sql, 'jobs') ||
+            str_contains($sql, 'failed_jobs') ||
+            str_contains($sql, 'user_session_activities') || 
+            str_contains($sql, 'user_session_model_changes') || 
+            str_contains($sql, 'user_sessions')
+           ) 
+        {
+            return; // prevent infinite loop
         }
 
         $operation = $matches[1];
