@@ -64,7 +64,7 @@ class UserSessionsServiceProvider extends ServiceProvider
             resource_path('views/user-sessions'),
 
         // Routes
-        __DIR__.'/../../stubs/routes/user-sessions.php.stub' =>
+        __DIR__.'/../../stubs/routes/user-sessions.php' =>
             base_path('routes/user-sessions.php'),
 
     ], 'user-sessions');
