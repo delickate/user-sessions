@@ -55,6 +55,9 @@ class UserSessionsServiceProvider extends ServiceProvider
         __DIR__.'/../../config/user-sessions.php' =>
             config_path('user-sessions.php'),
 
+        __DIR__.'/../../config/activitylog.php' =>
+            config_path('activitylog.php'),
+
         // Controllers
         __DIR__.'/../../stubs/controllers' =>
             app_path('Http/Controllers/UserSessions'),
