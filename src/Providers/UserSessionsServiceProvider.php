@@ -63,6 +63,10 @@ class UserSessionsServiceProvider extends ServiceProvider
             app_path('Http/Controllers/UserSessions'),
 
         // Controllers
+        __DIR__.'/../../stubs/models' =>
+            app_path('Models'),
+
+        // middleware
         __DIR__.'/../../stubs/middleware' =>
             app_path('Http/Middleware'),
 
