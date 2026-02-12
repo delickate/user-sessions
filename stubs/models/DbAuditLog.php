@@ -1,12 +1,12 @@
 <?php
 
-namespace Delickate\UserSessions\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class DbAuditLog extends Model
 {
-    protected $table = 'db_audit_logs';
+    protected $table = 'user_audit_logs';
 
     protected $fillable = [
         'table_name',

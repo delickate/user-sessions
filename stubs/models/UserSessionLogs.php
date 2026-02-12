@@ -1,11 +1,13 @@
 <?php
 
-namespace Delickate\UserSessions\Models;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserSessionActivity extends Model
+class UserSessionALogs extends Model
 {
+    protected $table = 'user_session_logs';
+
     protected $fillable = [
         'user_session_id',
         'user_id',

@@ -62,6 +62,11 @@ class UserSessionsServiceProvider extends ServiceProvider
         __DIR__.'/../../stubs/controllers' =>
             app_path('Http/Controllers/UserSessions'),
 
+        // Controllers
+        __DIR__.'/../../stubs/middleware' =>
+            app_path('Http/Middleware'),
+
+
         // Views
         __DIR__.'/../../stubs/views' =>
             resource_path('views/user-sessions'),
