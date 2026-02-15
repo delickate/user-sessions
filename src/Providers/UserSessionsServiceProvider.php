@@ -42,8 +42,8 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         if (config('user-sessions.ui.enabled')) 
         {
-            //$this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
-            //$this->loadViewsFrom(__DIR__ . '/../../resources/views','user-sessions');
+            $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+            $this->loadViewsFrom(__DIR__ . '/../../resources/views','user-sessions');
         }
 
         //publish all
