@@ -3,7 +3,7 @@
 namespace Delickate\UserSessions\Listeners;
 
 use Illuminate\Auth\Events\Login;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSessionImplement;
 
 class LogLogin
 {
@@ -16,7 +16,7 @@ class LogLogin
         $sessionId = session()->getId();
 
 
-        $userSession = UserSession::create([
+        $userSession = UserSessionImplement::create([
             'user_id' => $event->user->id,
             'login_at' => now(),
             //'session_id' => $sessionId,

@@ -2,13 +2,13 @@
 
 namespace Delickate\UserSessions\Observers;
 
-use Delickate\UserSessions\Models\DbAuditLog;
+use App\Models\DbAuditLog;
 use Illuminate\Support\Facades\Auth;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSessionImplement;
 
 
 use Illuminate\Support\Facades\DB;
-use Delickate\UserSessions\Models\UserSessionActivity;
+use App\Models\UserSessionActivityImplement;
 
 class AuditObserver
 {
@@ -56,7 +56,7 @@ class AuditObserver
         //     : null;
 
         $userId = auth()->id();
-        $userSessionId = UserSession::where('session_id', session()->getId())
+        $userSessionId = UserSessionImplement::where('session_id', session()->getId())
     ->value('id');
 
 

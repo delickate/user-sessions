@@ -3,13 +3,13 @@
 namespace Delickate\UserSessions\Listeners;
 
 use Illuminate\Auth\Events\Logout;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSessionImplement;
 
 class LogLogout
 {
     public function handle(Logout $event)
     {
-        UserSession::where('user_id', $event->user->id)
+        UserSessionImplement::where('user_id',  optional($event->user)->id)
             ->whereNull('logout_at')
             ->limit(1)
             ->update([

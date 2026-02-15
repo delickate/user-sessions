@@ -10,13 +10,13 @@ use Delickate\UserSessions\Listeners\LogLogin;
 use Delickate\UserSessions\Listeners\LogLogout;
 
 use Illuminate\Routing\Router;
-use Delickate\UserSessions\Middleware\LogUserActivity;
+use App\Http\Middleware\LogUserActivityImplement;
 
 use Illuminate\Support\Facades\DB;
-use Delickate\UserSessions\Models\UserSession;
-use Delickate\UserSessions\Models\DbAuditLog;
+use App\Models\UserSessionImplement;
+use App\Models\DbAuditLog;
 use Delickate\UserSessions\Observers\AuditObserver;
-use Delickate\UserSessions\Middleware\StoreUserSessionId;
+use App\Http\Middleware\StoreUserSessionIdImplement;
 
 
 
@@ -42,11 +42,8 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         if (config('user-sessions.ui.enabled')) 
         {
-            $this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
-            $this->loadViewsFrom(
-                __DIR__ . '/../../resources/views',
-                'user-sessions'
-            );
+            //$this->loadRoutesFrom(__DIR__ . '/../../routes/web.php');
+            //$this->loadViewsFrom(__DIR__ . '/../../resources/views','user-sessions');
         }
 
         //publish all
@@ -112,8 +109,8 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         // Middleware alias
         $router = $this->app['router'];
-        $router->aliasMiddleware('user.sessions', LogUserActivity::class);
-        $router->aliasMiddleware('store.user.session', StoreUserSessionId::class);
+        $router->aliasMiddleware('user.sessions', LogUserActivityImplement::class);
+        $router->aliasMiddleware('store.user.session', StoreUserSessionIdImplement::class);
 
 
         // Query listener for audit logs
@@ -165,7 +162,7 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         $userId = auth()->id();
         $session = session()->getId()
-            ? UserSession::where('session_id', session()->getId())->first()
+            ? UserSessionImplement::where('session_id', session()->getId())->first()
             : null;
 
         // Save only what we can get from query
