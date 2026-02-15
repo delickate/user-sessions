@@ -33,7 +33,7 @@ class LogUserActivityImplement
             'method'            => $request->method(),
             'url'               => $request->fullUrl(),
             'route_name'        => optional($request->route())->getName(),
-            'payload'           => $this->cleanPayload($request),
+            'payload'           => json_encode($this->cleanPayload($request)),
             'ip_address'        => $request->ip(),
             'user_agent'        => $request->userAgent(),
             'hit_at'            => now(),

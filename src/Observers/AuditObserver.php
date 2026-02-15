@@ -12,74 +12,37 @@ use App\Models\UserSessionActivityImplement;
 
 class AuditObserver
 {
-    /**
-     * Handle the "updating" event.
-     * Store original values temporarily
-     */
+    public function created($model)
+    {
+        $this->log($model, 'create', null, $model->getAttributes());
+    }
+
     public function updating($model)
     {
-        // Store before state in memory only
-        $model->_audit_before = $model->getOriginal();
+        $this->log(
+            $model,
+            'update',
+            $model->getOriginal(),
+            $model->getDirty()
+        );
     }
 
-    /**
-     * Handle the "updated" event.
-     */
-    public function updated($model)
-    {
-        $this->logAudit($model, 'update');
-    }
-
-    /**
-     * Handle the "deleting" event.
-     */
-    public function deleting($model)
-    {
-        // Store before state
-        $model->_audit_before = $model->getOriginal();
-    }
-
-    /**
-     * Handle the "deleted" event.
-     */
     public function deleted($model)
     {
-        $this->logAudit($model, 'delete');
+        $this->log($model, 'delete', $model->getOriginal(), null);
     }
 
-    protected function logAudit($model, $operation)
+    protected function log($model, $operation, $before, $after)
     {
-        // Get current user
-        //$userId = Auth::id();
-        // $session = session()->getId()
-        //     ? UserSession::where('session_id', session()->getId())->first()
-        //     : null;
-
-        $userId = auth()->id();
-        $userSessionId = UserSessionImplement::where('session_id', session()->getId())
-    ->value('id');
-
-
-        // DB::listen(function ($query) {
-        //     $sql = $query->sql;
-        //     $bindings = $query->bindings;
-        //     $connection = $query->connectionName;
-        // });
-
         DbAuditLog::create([
-            'user_id' => $userId,
-            'user_session_id' => $userSessionId,
-            'connection' => $model->getConnectionName() ?? config('database.default'),
+            'user_id' => auth()->id(),
+            'user_session_id' => null, // we’ll fix later
             'table_name' => $model->getTable(),
             'operation' => $operation,
-            'before' => $model->_audit_before ?? null,
-            'after' => $operation === 'update' ? $model->getChanges() : null,
-            'sql' => null, 
-            'bindings' => null,
+            'before' => $before,
+            'after' => $after,
             'executed_at' => now(),
         ]);
-
-        // Clean up temporary property
-        unset($model->_audit_before);
     }
 }
+

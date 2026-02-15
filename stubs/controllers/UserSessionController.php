@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserSessionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $users = User::orderBy('name')->get();
 
