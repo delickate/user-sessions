@@ -109,7 +109,9 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         // Middleware alias
         $router = $this->app['router'];
+        //$router->aliasMiddleware('user.sessions', LogUserActivityImplement::class);
         $router->aliasMiddleware('user.sessions', LogUserActivityImplement::class);
+
         $router->aliasMiddleware('store.user.session', StoreUserSessionIdImplement::class);
 
 

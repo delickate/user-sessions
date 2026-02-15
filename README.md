@@ -27,7 +27,7 @@ in `app/Http/Kernel.php`:
             ...
             //\Illuminate\Auth\Middleware\Authenticate::class,
             'user.sessions',
-            \App\Http\Middleware\LogUserActivity::class,
+            \App\Http\Middleware\LogUserActivityImplement::class,
         ],
 
 ],
