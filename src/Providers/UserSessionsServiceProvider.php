@@ -191,4 +191,22 @@ class UserSessionsServiceProvider extends ServiceProvider
             default => null,
         };
     }
+
+
 }
+
+class ModuleRegistry
+{
+    protected static array $modules = [];
+
+    public static function register(string $name, array $data = [])
+    {
+        self::$modules[$name] = $data;
+    }
+
+    public static function all()
+    {
+        return self::$modules;
+    }
+}
+
