@@ -8,7 +8,7 @@ class CreateDbAuditLogsTable extends Migration
 {
     public function up()
     {
-        Schema::create('db_audit_logs', function (Blueprint $table) {
+        Schema::create('user_audit_logs', function (Blueprint $table) {
         $table->id();
 
         $table->unsignedBigInteger('user_id')->nullable()->index();
@@ -22,7 +22,7 @@ class CreateDbAuditLogsTable extends Migration
         $table->json('before')->nullable();
         $table->json('after')->nullable();
 
-        $table->text('sql');
+        $table->text('sql')->nullable();
         $table->json('bindings')->nullable();
 
         $table->timestamp('executed_at');
@@ -36,6 +36,6 @@ class CreateDbAuditLogsTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('db_audit_logs');
+        Schema::dropIfExists('user_audit_logs');
     }
 }

@@ -1,26 +1,26 @@
 <?php 
 
-namespace Delickate\UserSessions\Middleware;
+namespace App\Http\Middleware;
 
 use Closure;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSessionImplement;
 
-class StoreUserSessionId
+class StoreUserSessionIdImplement
 {
     public function handle($request, Closure $next)
     {
         $response = $next($request);
 
-        if (auth()->check()) {
+        if (auth()->check()) 
+        {
             $sessionId = session()->getId();
 
-            if ($sessionId) {
-                $userSession = UserSession::where('user_id', auth()->id())
-                    ->whereNull('session_id')
-                    ->latest()
-                    ->first();
+            if ($sessionId) 
+            {
+                $userSession = UserSessionImplement::where('user_id', auth()->id())->whereNull('session_id')->latest()->first();
 
-                if ($userSession) {
+                if ($userSession) 
+                {
                     $userSession->update([
                         'session_id' => $sessionId,
                     ]);

@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\UserSessions;
 
 use App\Http\Controllers\Controller;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSessionImplement;
 
 use Illuminate\Http\Request;
-use App\Models\UserSessionActivities;
+use App\Models\UserSessionActivityImplement;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserSessionController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $users = User::orderBy('name')->get();
 
@@ -25,7 +25,7 @@ class UserSessionController extends Controller
             $date = Carbon::today()->toDateString();
         }
 
-        $query = UserSessionActivities::with('user')->where(function($q) use ($date) {
+        $query = UserSessionActivityImplement::with('user')->where(function($q) use ($date) {
             // match rows with created_at on that date OR rows where hit_at (unix) matches that date
             $q->whereDate('created_at', $date)
               ->orWhereRaw('DATE(FROM_UNIXTIME(`hit_at`)) = ?', [$date]);

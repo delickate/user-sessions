@@ -40,7 +40,7 @@ class DbAuditLog extends Model
     public function userSession()
     {
         return $this->belongsTo(
-            UserSession::class,
+            UserSessionImplement::class,
             'session_id',
             'session_id'
         );
