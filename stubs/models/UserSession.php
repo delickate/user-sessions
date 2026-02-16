@@ -23,7 +23,17 @@ class UserSession extends Model
     ];
 
     protected $casts = [
-    'login_at' => 'datetime',
-    'logout_at' => 'datetime',
-];
+        'login_at' => 'datetime',
+        'logout_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function activities()
+    {
+        return $this->hasMany(UserSessionActivities::class, 'session_id', 'id');
+    }
 }

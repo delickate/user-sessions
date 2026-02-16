@@ -54,4 +54,18 @@ class UserSessionController extends Controller
   
         return view('user-sessions.index', compact('sessions', 'users', 'date'));
     }
+
+
+    public function activities(Request $request, $id)
+    {
+        $session = UserSession::with('user')->findOrFail($id);
+
+        $activities = UserSessionActivities::with('user')
+            ->where('session_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(50)
+            ->appends($request->query());
+
+        return view('sessions.activities', compact('session', 'activities'));
+    }
 }

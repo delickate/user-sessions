@@ -2,13 +2,13 @@
 
 namespace Delickate\UserSessions\Observers;
 
-use Delickate\UserSessions\Models\DbAuditLog;
+use App\Models\DbAuditLog;
 use Illuminate\Support\Facades\Auth;
-use Delickate\UserSessions\Models\UserSession;
+use App\Models\UserSession;
 
 
 use Illuminate\Support\Facades\DB;
-use Delickate\UserSessions\Models\UserSessionActivity;
+use App\Models\UserSessionActivity;
 
 class AuditObserver
 {

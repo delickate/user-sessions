@@ -39,6 +39,7 @@
                         <th>User</th>
                         <th>IP Address</th>
                         <th>User Agent</th>
+                        <th>Activity</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -49,6 +50,9 @@
                             <td>{{ $s->user->name ?? '—' }}</td>
                             <td>{{ $s->ip_address }}</td>
                             <td>{{ \Illuminate\Support\Str::limit($s->user_agent, 100) }}</td>
+                            <td>
+                                <a href="{{ route('sessions.activities', $s->id) }}" class="btn btn-sm btn-default">Activities</a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
