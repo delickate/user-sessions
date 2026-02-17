@@ -76,6 +76,11 @@ class UserSessionsServiceProvider extends ServiceProvider
         __DIR__.'/../../stubs/routes/user-sessions.php' =>
             base_path('routes/user-sessions.php'),
 
+        //observer
+        __DIR__.'/../../stubs/Observers/AuditObserver.php' =>
+            app_path('Observers/AuditObserver.php'),
+
+
     ], 'user-sessions');
         
         // Publish config
