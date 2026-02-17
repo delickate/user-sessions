@@ -15,6 +15,7 @@ class UserSessionImplement extends Model
         'ip_address',
         'user_agent',
         'session_date',
+        'session_id'
     ];
 
     protected $dates = [

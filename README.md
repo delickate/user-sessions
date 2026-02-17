@@ -134,6 +134,7 @@ This version includes:
 Here is list of commands in order to run
 
 ```bash
+> php artisan session:table
 > composer require delickate/user-sessions
 > php artisan vendor:publish --tag=user-sessions
 > php artisan migrate

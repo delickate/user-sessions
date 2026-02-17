@@ -28,7 +28,7 @@ class LogUserActivityImplement
         }
 
         UserSessionActivityImplement::create([
-            'user_session_id'   => $session->id,
+            'user_session_id'   => $session->session_id,
             'user_id'           => $user->id,
             'method'            => $request->method(),
             'url'               => $request->fullUrl(),

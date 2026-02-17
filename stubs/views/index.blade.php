@@ -6,7 +6,7 @@
 <div >
     <h4>Sessions</h4>
 
-    <form method="GET" action="{{ route('sessions.index') }}" class="form-inline" style="margin-bottom:15px;">
+    <form method="GET" action="{{ url('admin/user-sessions') }}" class="form-inline" style="margin-bottom:15px;">
         <div class="form-group">
             <label for="user_id" style="margin-right:8px;">User</label>
             <select name="user_id" id="user_id" class="form-control" style="margin-right:15px;">
@@ -25,7 +25,7 @@
         </div>
 
         <button class="btn btn-primary" type="submit">Filter</button>
-        <a href="{{ route('sessions.index') }}" class="btn btn-default" style="margin-left:8px;">Reset</a>
+        <a href="{{ url('admin/user-sessions') }}" class="btn btn-default" style="margin-left:8px;">Reset</a>
     </form>
 
     <div class="panel panel-default">
@@ -51,7 +51,7 @@
                             <td>{{ $s->ip_address }}</td>
                             <td>{{ \Illuminate\Support\Str::limit($s->user_agent, 100) }}</td>
                             <td>
-                                <a href="{{ route('sessions.activities', $s->id) }}" class="btn btn-sm btn-default">Activities</a>
+                                <a href="{{ route('sessions.activities', $s->user_session_id) }}" class="btn btn-sm btn-default">Activities</a>
                             </td>
                         </tr>
                     @empty

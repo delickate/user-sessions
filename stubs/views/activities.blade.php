@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('layouts.app')
 
 @section('title', 'Session Activities')
 
@@ -62,6 +62,5 @@
         {{ $activities->links() }}
     </div>
 
-    <a href="{{ route('sessions.index') }}" class="btn btn-default" style="margin-top:10px;">Back to sessions</a>
-</div>
+    <a href="{{ url('admin/user-sessions') }}" class="btn btn-default" style="margin-top:10px;">Back to sessions</a>
 @endsection

@@ -19,7 +19,7 @@ class LogLogin
         $userSession = UserSessionImplement::create([
             'user_id' => $event->user->id,
             'login_at' => now(),
-            //'session_id' => $sessionId,
+            'session_id' => $sessionId,
             'session_date' => now()->toDateString(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),

@@ -130,9 +130,9 @@ class UserSessionsServiceProvider extends ServiceProvider
         //     $model::observe(ModelObserver::class);
         // }
 
-        // DB::listen(function ($query) {
-        //     $this->logQuery($query);
-        // });
+        DB::listen(function ($query) {
+            $this->logQuery($query);
+        });
     }
 
     protected function logQuery($query)
