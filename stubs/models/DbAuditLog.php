@@ -14,7 +14,7 @@ class DbAuditLog extends Model
         'before',
         'after',
         'user_id',
-        'session_id',
+        'user_session_id',
         'executed_at',
     ];
 

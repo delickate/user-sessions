@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\User;
 return [
     // Models for which activity should be recorded when requests involve them.
     // Use fully-qualified class names. Example: App\Models\Post::class

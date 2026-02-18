@@ -14,12 +14,12 @@ class CreateDbAuditLogsTable extends Migration
         $table->unsignedBigInteger('user_id')->nullable()->index();
         $table->string('user_session_id')->nullable()->index();
 
-        $table->string('event_type'); // url_hit | created | updated | deleted
+        $table->string('event_type')->nullable(); // url_hit | created | updated | deleted
         $table->string('method')->nullable(); // GET, POST etc
         $table->text('url')->nullable();
 
         $table->string('connection')->nullable();
-        $table->enum('operation', ['insert', 'update', 'delete']);
+        $table->enum('operation', ['insert', 'update', 'delete', 'updated']);
 
         $table->string('table_name')->nullable();
 

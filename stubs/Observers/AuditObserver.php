@@ -59,15 +59,16 @@ class AuditObserver
 
     protected function storeLog($model, string $operation, $before, $after): void
     {
+         $user = auth()->user();
+        $session = \App\Models\UserSessionImplement::where('user_id', $user->id)->latest()->first();
+
         \App\Models\DbAuditLog::create([
             'table_name'  => $model->getTable(),
             'operation'   => $operation,
             'before'      => $before,
             'after'       => $after,
             'user_id'     => auth()->id(),
-            'session_id'  => config('activitylog.log_session')
-                ? session()->getId()
-                : null,
+            'user_session_id'  => $session->session_id,
             'executed_at' => now(),
         ]);
     }
