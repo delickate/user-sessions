@@ -20,7 +20,7 @@ class LogUserActivityImplement
 
         $user = auth()->user();
 
-        $session = UserSessionImplement::where('user_id', $user->id)->whereNull('logout_at')->latest()->first();
+        $session = UserSessionImplement::where('user_id', $user->id)->latest()->first();
 
         if (!$session) 
         {

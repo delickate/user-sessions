@@ -13,12 +13,15 @@ class UserSessionActivityImplement extends Model
     protected $fillable = [
         'user_session_id',
         'user_id',
-        'action',
-        'description',
+        'route_name',
+        'hit_at',
         'ip_address',
         'user_agent',
         'metadata',
         'created_at',
+        'payload',
+        'url',
+        'method'
     ];
 
     protected $casts = [

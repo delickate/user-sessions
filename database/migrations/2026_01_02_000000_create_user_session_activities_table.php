@@ -11,7 +11,7 @@ class CreateUserSessionActivitiesTable extends Migration
         Schema::create('user_session_activities', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_session_id')->index();
+            $table->string('user_session_id')->nullable();
             $table->unsignedBigInteger('user_id')->index();
 
             $table->string('method', 10)->nullable();

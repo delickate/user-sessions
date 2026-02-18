@@ -38,6 +38,8 @@ After installing, run the migrations to create required database tables:
 php artisan migrate
 ```
 
+SESSION_DRIVER=database
+
 #### Middleware
 
 Add the user sessions middleware in your app/Http/Kernel.php under the web middleware group (after authentication middleware):
