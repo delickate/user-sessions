@@ -15,7 +15,7 @@ use App\Http\Middleware\LogUserActivityImplement;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserSessionImplement;
 use App\Models\DbAuditLog;
-use Delickate\UserSessions\Observers\AuditObserver;
+//use Delickate\UserSessions\Observers\AuditObserver;
 use App\Http\Middleware\StoreUserSessionIdImplement;
 
 
@@ -122,12 +122,12 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         // Query listener for audit logs
 
-        foreach (config('user-sessions.audit_models', []) as $modelClass) 
-        {
-            if (class_exists($modelClass)) {
-                $modelClass::observe(AuditObserver::class);
-            }
-        }
+        // foreach (config('user-sessions.audit_models', []) as $modelClass) 
+        // {
+        //     if (class_exists($modelClass)) {
+        //         $modelClass::observe(AuditObserver::class);
+        //     }
+        // }
 
 
         // foreach (config('user-sessions.models', []) as $model) 
