@@ -38,7 +38,6 @@ After installing, run the migrations to create required database tables:
 php artisan migrate
 ```
 
-SESSION_DRIVER=database
 
 #### Middleware
 
@@ -61,6 +60,17 @@ protected $middlewareGroups = [
 ```
 
 This middleware automatically logs user activity and stores session information.
+
+#### Load in service provider
+```php
+public function boot()
+    {
+        //
+        foreach (config('activitylog.models', []) as $modelClass) {
+            $modelClass::observe(AuditObserver::class);
+        }
+    }
+```
 
 #### Publish Package Files
 
@@ -136,7 +146,7 @@ This version includes:
 Here is list of commands in order to run
 
 ```bash
-> php artisan session:table
+> php artisan session:table (only if session is being store into database.  its optional)
 > composer require delickate/user-sessions
 > php artisan vendor:publish --tag=user-sessions
 > php artisan migrate
