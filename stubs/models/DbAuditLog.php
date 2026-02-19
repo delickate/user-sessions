@@ -16,6 +16,11 @@ class DbAuditLog extends Model
         'user_id',
         'user_session_id',
         'executed_at',
+        'payload',
+        'method',
+        'url',
+        'user_agent',
+        'created_at'
     ];
 
     protected $casts = [

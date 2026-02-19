@@ -130,9 +130,20 @@ class UserSessionsServiceProvider extends ServiceProvider
         // }
 
 
-        foreach (config('activitylog.models', []) as $modelClass) {
-            $modelClass::observe(\App\Observers\AuditObserver::class);
+        // foreach (config('activitylog.models', []) as $modelClass) {
+        //     $modelClass::observe(\App\Observers\AuditObserver::class);
+        // }
+
+        $observerClass = \App\Observers\AuditObserver::class;
+
+        if (class_exists($observerClass)) {
+            foreach (config('activitylog.models', []) as $modelClass) {
+                if (class_exists($modelClass)) {
+                    $modelClass::observe($observerClass);
+                }
+            }
         }
+
 
         // DB::listen(function ($query) {
         //     $this->logQuery($query);

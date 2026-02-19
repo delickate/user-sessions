@@ -61,17 +61,26 @@ protected $middlewareGroups = [
 
 This middleware automatically logs user activity and stores session information.
 
-#### Load in service provider
+#### Routes
 ```php
-public function boot()
-    {
-        //
-        foreach (config('activitylog.models', []) as $modelClass) {
-            $modelClass::observe(AuditObserver::class);
-        }
-    }
+ Route::get('/sessions', [UserSessionController::class, 'index'])
+        ->name('sessions');
+
+    Route::get('/user-sessions/{session_id}/activities', 
+    [UserSessionController::class, 'activities']
+)->name('user-sessions.activities');
+
+    Route::get('/user-sessions/{session_id}/audit-logs',
+    [UserSessionController::class, 'auditLogs']
+)->name('user-sessions.audit-logs');
 ```
 
+#### Layout links
+```html
+<ul>
+    <li><a href="{{ url('sessions') }}">Sessions</a></li>
+</ul>  
+```
 #### Publish Package Files
 
 Publish all package configuration, views, routes, controllers, and middleware:

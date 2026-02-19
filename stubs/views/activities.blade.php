@@ -1,66 +1,73 @@
 @extends('layouts.app')
 
-@section('title', 'Session Activities')
-
 @section('content')
-<div>
-    <h4>Activities for session #{{ $session->id }} ({{ $session->user->name ?? '—' }})</h4>
+<div class="container">
+    <h2 class="mb-4">
+        Session Activities (Session ID: {{ $session->session_id }})
+    </h2>
 
-    <p>Session created at: {{ optional($session->created_at)->format('Y-m-d H:i') }}</p>
+    <a href="{{ url('/sessions') }}" class="btn btn-secondary mb-3">
+        Back to Sessions
+    </a>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">Activity Logs</div>
-        <div class="panel-body p-0">
-            <table class="table table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>When</th>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Old values</th>
-                        <th>New values</th>
-                        <th>IP</th>
-                        <th>Payload</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($activities as $a)
+    @if($activities->count())
+        <div class="card">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ $a->id }}</td>
-                            <td>{{ optional($a->created_at)->format('Y-m-d H:i:s') }}</td>
-                            <td>{{ $a->user->name ?? '—' }}</td>
-                            <td>{{ $a->action }}</td>
-                            <td style="max-width:250px;">
-                                @if($a->old_values)
-                                    <pre style="white-space:pre-wrap;word-break:break-word;max-height:200px;overflow:auto">{{ json_encode(json_decode($a->old_values), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
-                                @else
-                                    {{ $a->details ?? '—' }}
-                                @endif
-                            </td>
-                            <td style="max-width:250px;">
-                                @if($a->new_values)
-                                    <pre style="white-space:pre-wrap;word-break:break-word;max-height:200px;overflow:auto">{{ json_encode(json_decode($a->new_values), JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
-                                @else
-                                    —
-                                @endif
-                            </td>
-                            <td>{{ $a->ip_address }}</td>
-                            <td>{{ $a->details ?? $a->payload }}</td>
+                            <th>#</th>
+                            <th>User ID</th>
+                            <th>Method</th>
+                            <th>URL</th>
+                            <th>Route Name</th>
+                            <th>IP Address</th>
+                            <th>User Agent</th>
+                            <th>Hit At</th>
+                            <th>Created At</th>
+                            <th>Action</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="8" class="text-center">No activity logs for this session.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($activities as $index => $activity)
+                            <tr>
+                                <td>{{ $activities->firstItem() + $index }}</td>
+                                <td>{{ $activity->user_id }}</td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        {{ $activity->method }}
+                                    </span>
+                                </td>
+                                <td style="max-width: 250px; word-wrap: break-word;">
+                                    {{ $activity->url }}
+                                </td>
+                                <td>{{ $activity->route_name ?? '-' }}</td>
+                                <td>{{ $activity->ip_address }}</td>
+                                <td style="max-width: 250px; word-wrap: break-word;">
+                                    {{ $activity->user_agent }}
+                                </td>
+                                <td>{{ $activity->hit_at }}</td>
+                                <td>{{ $activity->created_at }}</td>
+                                <td>
+    <a href="{{ route('user-sessions.audit-logs', $session->session_id) }}" 
+       class="btn btn-sm btn-primary">
+        View Detail
+    </a>
+</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div style="margin-top:12px;">
-        {{ $activities->links() }}
-    </div>
-
-    <a href="{{ url('admin/user-sessions') }}" class="btn btn-default" style="margin-top:10px;">Back to sessions</a>
+        <div class="mt-3">
+            {{ $activities->links() }}
+        </div>
+    @else
+        <div class="alert alert-info">
+            No activities found for this session.
+        </div>
+    @endif
+</div>
 @endsection

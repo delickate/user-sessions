@@ -1,71 +1,61 @@
 @extends('layouts.app')
 
-@section('title', 'Sessions')
-
 @section('content')
-<div >
-    <h4>Sessions</h4>
+<div class="container">
+    <h2 class="mb-4">User Sessions</h2>
 
-    <form method="GET" action="{{ url('admin/user-sessions') }}" class="form-inline" style="margin-bottom:15px;">
-        <div class="form-group">
-            <label for="user_id" style="margin-right:8px;">User</label>
-            <select name="user_id" id="user_id" class="form-control" style="margin-right:15px;">
-                <option value="">All users</option>
-                @foreach($users as $u)
-                    <option value="{{ $u->id }}" {{ request('user_id') == $u->id ? 'selected' : '' }}>
-                        {{ $u->name }} ({{ $u->email }})
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="form-group" style="margin-right:15px;">
-            <label for="date" style="margin-right:8px;">Date</label>
-            <input type="date" name="date" id="date" class="form-control" value="{{ $date }}">
-        </div>
-
-        <button class="btn btn-primary" type="submit">Filter</button>
-        <a href="{{ url('admin/user-sessions') }}" class="btn btn-default" style="margin-left:8px;">Reset</a>
-    </form>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">Sessions for {{ \Carbon\Carbon::parse($date)->format('F j, Y') }}</div>
-        <div class="panel-body p-0">
-            <table class="table table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Created At</th>
-                        <th>User</th>
-                        <th>IP Address</th>
-                        <th>User Agent</th>
-                        <th>Activity</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($sessions as $s)
+    @if($sessions->count())
+        <div class="card">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ $s->id }}</td>
-                            <td>{{ $s->created_at->format('Y-m-d H:i') }}</td>
-                            <td>{{ $s->user->name ?? '—' }}</td>
-                            <td>{{ $s->ip_address }}</td>
-                            <td>{{ \Illuminate\Support\Str::limit($s->user_agent, 100) }}</td>
-                            <td>
-                                <a href="{{ route('sessions.activities', $s->user_session_id) }}" class="btn btn-sm btn-default">Activities</a>
-                            </td>
+                            <th>#</th>
+                            <th>User ID</th>
+                            <th>Session ID</th>
+                            <th>Login At</th>
+                            <th>Logout At</th>
+                            <th>Session Date</th>
+                            <th>IP Address</th>
+                            <th>User Agent</th>
+                            <th>Created At</th>
+                            <th>Action</th>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="5" class="text-center">No sessions found for this date.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($sessions as $index => $session)
+                            <tr>
+                                <td>{{ $sessions->firstItem() + $index }}</td>
+                                <td>{{ $session->user_id }}</td>
+                                <td>{{ $session->session_id }}</td>
+                                <td>{{ $session->login_at ?? '-' }}</td>
+                                <td>{{ $session->logout_at ?? '-' }}</td>
+                                <td>{{ $session->session_date }}</td>
+                                <td>{{ $session->ip_address }}</td>
+                                <td style="max-width: 250px; word-wrap: break-word;">
+                                    {{ $session->user_agent }}
+                                </td>
+                                <td>{{ $session->created_at }}</td>
+                                <td>
+    <a href="{{ route('user-sessions.activities', $session->session_id) }}" 
+       class="btn btn-sm btn-primary">
+        View Activities
+    </a>
+</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div style="margin-top:12px;">
-        {{ $sessions->links() }}
-    </div>
+        <div class="mt-3">
+            {{ $sessions->links() }}
+        </div>
+    @else
+        <div class="alert alert-info">
+            No user sessions found.
+        </div>
+    @endif
 </div>
 @endsection

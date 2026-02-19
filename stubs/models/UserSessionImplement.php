@@ -37,4 +37,10 @@ class UserSessionImplement extends Model
     {
         return $this->hasMany(UserSessionActivities::class, 'session_id', 'id');
     }
+
+    public function auditLogs()
+    {
+        return $this->hasMany(DbAuditLog::class, 'user_session_id', 'session_id');
+    }
+
 }
