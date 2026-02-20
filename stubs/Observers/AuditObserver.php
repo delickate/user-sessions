@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\DbAuditLog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AuditObserver
 {
@@ -59,18 +60,42 @@ class AuditObserver
 
     protected function storeLog($model, string $operation, $before, $after): void
     {
-         $user = auth()->user();
-        $session = \App\Models\UserSessionImplement::where('user_id', $user->id)->latest()->first();
+        $request = request(); 
 
-        \App\Models\DbAuditLog::create([
-            'table_name'  => $model->getTable(),
-            'operation'   => $operation,
-            'before'      => $before,
-            'after'       => $after,
-            'user_id'     => auth()->id(),
-            'user_session_id'  => $session->session_id,
-            'executed_at' => now(),
+        $user = auth()->user();
+
+        $session = \App\Models\UserSessionImplement::where('user_id', $user?->id)
+            ->latest()
+            ->first();
+
+        DbAuditLog::create([
+            'table_name'      => $model->getTable(),
+            'operation'       => $operation,
+            'before'          => $before,
+            'after'           => $after,
+            'user_id'         => auth()->id(),
+            'user_session_id' => $session?->session_id,
+            'executed_at'     => now(),
+
+            // Request data
+            'method'      => $request->method(),
+            'url'         => $request->fullUrl(),
+            'route_name'  => optional($request->route())->getName(),
+            'ip_address'  => $request->ip(),
+            'user_agent'  => $request->userAgent(),
+
+            // Exclude sensitive fields
+            'payload'     => json_encode(
+                $this->cleanPayload($request->except(['password', 'password_confirmation']))
+            ),
         ]);
+    }
+
+    protected function cleanPayload(array $payload): array
+    {
+        unset($payload['_token']);
+
+        return $payload;
     }
 
 }
