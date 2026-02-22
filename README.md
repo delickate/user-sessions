@@ -43,7 +43,22 @@ php artisan migrate
 
 Add the user sessions middleware in your app/Http/Kernel.php under the web middleware group (after authentication middleware):
 
+1) \App\Http\Middleware\SecurityHeaders::class inside middleware array
+2) 'user.sessions' inside middlewareGroups array
+
 ```php
+protected $middleware = [
+        // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \Fruitcake\Cors\HandleCors::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
+        \App\Http\Middleware\SecurityHeaders::class,
+    ];
+
 protected $middlewareGroups = [
     'web' => [
         \App\Http\Middleware\EncryptCookies::class,
