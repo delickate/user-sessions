@@ -101,7 +101,7 @@ This middleware automatically logs user activity and stores session information.
 Publish all package configuration, views, routes, controllers, and middleware:
 
 ```bash
-php artisan vendor:publish --tag=user-sessions
+php artisan vendor:publish --tag=user-sessions  --force
 ```
 
 ## ⚡ Features
@@ -172,7 +172,7 @@ Here is list of commands in order to run
 ```bash
 > php artisan session:table (only if session is being store into database.  its optional)
 > composer require delickate/user-sessions
-> php artisan vendor:publish --tag=user-sessions
+> php artisan vendor:publish --tag=user-sessions  --force
 > php artisan migrate
 ```
 
