@@ -11,14 +11,9 @@ class AddPasswordChangedAtToUsers extends Migration
        Schema::table('users', function (Blueprint $table) {
             $table->timestamp('password_changed_at')->nullable();
             $table->boolean('must_change_password')->default(false);
+            
         });
-
-
         
-    }
-
-
-
     }
 
     public function down()
