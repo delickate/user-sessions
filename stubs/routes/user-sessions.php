@@ -16,15 +16,33 @@
  *
  */
 use App\Http\Controllers\UserSessions\UserSessionController;
+use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\HomeController;
 
-Route::middleware(['web', 'auth'])
-    ->prefix('admin/user-sessions')
-    ->group(function () {
-        Route::get('/', [UserSessionController::class, 'index'])
-            ->name('admin.user-sessions');
-    });
+//SANI: change password
+    Route::middleware(['auth'])->group(function () 
+    {
+    	//SANI: user sessions
+	    Route::get('/sessions', [UserSessionController::class, 'index'])
+	        ->name('sessions');
 
+	    Route::get('/user-sessions/{session_id}/activities', 
+	    [UserSessionController::class, 'activities']
+		)->name('user-sessions.activities');
 
-    Route::get('/sessions/{id}/activities', [SessionsController::class, 'activities'])
-    ->middleware('auth')
-    ->name('sessions.activities');
+	    Route::get('/user-sessions/{session_id}/audit-logs',
+	    [UserSessionController::class, 'auditLogs']
+		)->name('user-sessions.audit-logs');
+	
+    	Route::get('/change-password', [ChangePasswordController::class, 'show'])
+        ->name('password.change.form');
+
+    	Route::post('/change-password', [ChangePasswordController::class, 'update'])
+        ->name('password.change.update');
+
+    	//Forcefully change password
+    	Route::middleware(['force.password.change'])->group(function () 
+    	{
+    		Route::get('/home', [HomeController::class, 'index']);
+		});
+	});

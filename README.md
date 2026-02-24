@@ -48,52 +48,98 @@ Add the user sessions middleware in your app/Http/Kernel.php under the web middl
 
 ```php
 protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
-        \App\Http\Middleware\TrustProxies::class,
-        \Fruitcake\Cors\HandleCors::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
-        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-
-        \App\Http\Middleware\SecurityHeaders::class,
+        //...
+        //...
+        \App\Http\Middleware\SecurityHeaders::class, //SANI: user-sessions
+        \App\Http\Middleware\CheckPasswordExpiry::class, //SANI: user-sessions
     ];
 
 protected $middlewareGroups = [
-    'web' => [
-        \App\Http\Middleware\EncryptCookies::class,
-        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        \Illuminate\Session\Middleware\StartSession::class,
-        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-        \App\Http\Middleware\VerifyCsrfToken::class,
-        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        'web' => [
+            //...
+            //...
+            //\Illuminate\Auth\Middleware\Authenticate::class, 
+            'user.sessions',  //SANI: user-sessions
+        ],
+    ];
 
-        // User Sessions Middleware
-        'user.sessions',
-    ],
-];
+protected $routeMiddleware = [
+        //...
+        //...
+        'force.password.change' => \App\Http\Middleware\ForcePasswordChange::class,   //SANI: user-sessions
+    ];
 ```
 
 This middleware automatically logs user activity and stores session information.
 
 #### Routes
 ```php
- Route::get('/sessions', [UserSessionController::class, 'index'])
-        ->name('sessions');
+ //SANI: change password
+    Route::middleware(['auth'])->group(function () 
+    {
+        //SANI: user sessions
+        Route::get('/sessions', [UserSessionController::class, 'index'])
+            ->name('sessions');
 
-    Route::get('/user-sessions/{session_id}/activities', 
-    [UserSessionController::class, 'activities']
-)->name('user-sessions.activities');
+        Route::get('/user-sessions/{session_id}/activities', 
+        [UserSessionController::class, 'activities']
+        )->name('user-sessions.activities');
 
-    Route::get('/user-sessions/{session_id}/audit-logs',
-    [UserSessionController::class, 'auditLogs']
-)->name('user-sessions.audit-logs');
+        Route::get('/user-sessions/{session_id}/audit-logs',
+        [UserSessionController::class, 'auditLogs']
+        )->name('user-sessions.audit-logs');
+    
+        //SANI: Change password & their rules
+        Route::get('/change-password', [ChangePasswordController::class, 'show'])
+        ->name('password.change.form');
+
+        Route::post('/change-password', [ChangePasswordController::class, 'update'])
+        ->name('password.change.update');
+
+        //SANI: Forcefully change password
+        Route::middleware(['force.password.change'])->group(function () 
+        {
+            Route::get('/home', [HomeController::class, 'index']);
+        });
+    });
+```
+
+#### Models
+
+Open User model and add 'password_changed_at' in fillable like this
+
+```php
+namespace App\Models;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'password_changed_at'   //SANI: user-sessions
+    ];
+
 ```
 
 #### Layout links
 ```html
 <ul>
     <li><a href="{{ url('sessions') }}">Sessions</a></li>
+    <li><a href="{{ url('/change-password') }}">Change password</a></li>
 </ul>  
 ```
 #### Publish Package Files
@@ -152,8 +198,22 @@ User Sessions package provides the following features:
 
  - Excludes sensitive fields (passwords, tokens) from logs.
  - Minimal overhead and fully compatible with Laravel's session system
+ - Clickjacking Protection (Prevents the application from being embedded in iframe elements on external domains)
+ - MIME-Type Sniffing Prevention (Prevents browsers from interpreting files as a different MIME type than declared)
+ - Cross-Site Scripting (XSS) Protection (Legacy Browsers)
+ - Referrer Policy Enforcement (Controls how much referrer information is shared during navigation)
+ - Content Security Policy (Restricts the sources from which the browser may load resources)
+ - HTTP Strict Transport Security (Forces browsers to use HTTPS for all future requests)
 
 
+ ##### 8. Password Policy & Authentication Controls
+- Strong password complexity enforcement
+- Password history restriction (reuse prevention)
+- Forced password change mechanisms
+- 90-day password expiration enforcement
+- Secure password storage using strong hashing
+- Administrative forced reset capability
+ 
 
 ---
 

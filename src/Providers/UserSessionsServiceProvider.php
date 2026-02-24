@@ -74,7 +74,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         __DIR__.'/../../stubs/controllers' =>
             app_path('Http/Controllers/UserSessions'),
 
-        // Controllers
+        // model
         __DIR__.'/../../stubs/models' =>
             app_path('Models'),
 
@@ -86,6 +86,8 @@ class UserSessionsServiceProvider extends ServiceProvider
         // Views
         __DIR__.'/../../stubs/views' =>
             resource_path('views/user-sessions'),
+         __DIR__.'/../../stubs/views/auth/change-password.blade.php' =>
+            resource_path('views/auth/change-password.blade.php'),
 
         // Routes
         __DIR__.'/../../stubs/routes/user-sessions.php' =>
