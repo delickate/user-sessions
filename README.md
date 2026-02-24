@@ -70,7 +70,7 @@ protected $routeMiddleware = [
     ];
 ```
 
-This middleware automatically logs user activity and stores session information.
+This middleware automatically logs user activity and stores session information & will provide security protections.
 
 #### Routes
 ```php
