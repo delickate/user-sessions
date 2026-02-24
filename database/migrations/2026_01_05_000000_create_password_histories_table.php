@@ -19,7 +19,7 @@ class CreatePasswordHistoryTable extends Migration
 
 
         
-    });
+    
 
 
 
