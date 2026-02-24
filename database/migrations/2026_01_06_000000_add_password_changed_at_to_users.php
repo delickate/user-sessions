@@ -15,7 +15,7 @@ class AddPasswordChangedAtToUsers extends Migration
 
 
         
-    });
+    }
 
 
 
