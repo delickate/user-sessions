@@ -71,11 +71,13 @@ class UserSessionsServiceProvider extends ServiceProvider
             config_path('activitylog.php'),
 
         // Controllers
+        __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
+            app_path('Http/Controllers/ChangePasswordController.php'),
+                
         __DIR__.'/../../stubs/controllers' =>
             app_path('Http/Controllers/UserSessions'),
 
-        __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
-            app_path('Http/Controllers/ChangePasswordController.php'),
+
 
         // model
         __DIR__.'/../../stubs/models' =>
