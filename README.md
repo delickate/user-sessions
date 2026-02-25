@@ -143,7 +143,7 @@ class User extends Authenticatable
 
 #### Exception handler
 
-Open App\Exceptions\Hnadler.php file and update it like this
+Open App\Exceptions\Handler.php file and update it like this
 
 ```PHP
 use App\Models\ExceptionLog;
