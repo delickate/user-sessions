@@ -74,6 +74,11 @@ This middleware automatically logs user activity and stores session information 
 
 #### Routes
 ```php
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserSessions\UserSessionController;
+use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\HomeController;
+
  //SANI: change password
     Route::middleware(['auth'])->group(function () 
     {
