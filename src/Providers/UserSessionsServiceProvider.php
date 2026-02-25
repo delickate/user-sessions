@@ -70,7 +70,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         // __DIR__.'/../../config/activitylog.php' =>
         //     config_path('activitylog.php'),
         __DIR__.'/../../config' =>
-            config_path('config'),    
+            config_path('/'),    
 
         // Controllers
         // __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
