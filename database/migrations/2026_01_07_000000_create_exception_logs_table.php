@@ -9,16 +9,17 @@ class CreateExceptionLogsTable extends Migration
     public function up()
     {
        Schema::create('exception_logs', function (Blueprint $table) {
-        $table->id();
-        $table->text('message');
-        $table->text('file')->nullable();
-        $table->integer('line')->nullable();
-        $table->longText('trace')->nullable();
-        $table->string('url')->nullable();
-        $table->string('method')->nullable();
-        $table->ipAddress('ip')->nullable();
-        $table->unsignedBigInteger('user_id')->nullable();
-        $table->timestamps();
+            $table->id();
+            $table->text('message');
+            $table->text('file')->nullable();
+            $table->integer('line')->nullable();
+            $table->longText('trace')->nullable();
+            $table->string('url')->nullable();
+            $table->string('method')->nullable();
+            $table->ipAddress('ip')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->timestamps();
+        });
         
     }
 
