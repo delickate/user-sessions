@@ -101,6 +101,12 @@ This middleware automatically logs user activity and stores session information 
         {
             Route::get('/home', [HomeController::class, 'index']);
         });
+
+        //SANI: Exception logs
+        Route::get('/test-exception', function () 
+        {
+            throw new Exception("Test Exception Logging");
+        });
     });
 ```
 
@@ -133,6 +139,35 @@ class User extends Authenticatable
         'password_changed_at'   //SANI: user-sessions
     ];
 
+```
+
+#### Exception handler
+
+Open App\Exceptions\Hnadler.php file and update it like this
+
+```PHP
+use App\Models\ExceptionLog;
+use Throwable;
+
+public function register()
+    {
+        $this->reportable(function (Throwable $e) {
+                try {
+                ExceptionLog::create([
+                    'message' => $e->getMessage(),
+                    'file'    => $e->getFile(),
+                    'line'    => $e->getLine(),
+                    'trace'   => $e->getTraceAsString(),
+                    'url'     => request()->fullUrl() ?? null,
+                    'method'  => request()->method() ?? null,
+                    'ip'      => request()->ip() ?? null,
+                    'user_id' => auth()->check() ? auth()->id() : null,
+                ]);
+            } catch (\Exception $ex) {
+                // Prevent infinite loop if DB logging fails
+            }
+        });
+    }
 ```
 
 #### Layout links

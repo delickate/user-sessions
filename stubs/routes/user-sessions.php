@@ -45,4 +45,9 @@ use App\Http\Controllers\HomeController;
     	{
     		Route::get('/home', [HomeController::class, 'index']);
 		});
+
+		Route::get('/test-exception', function () 
+		{
+		    throw new Exception("Test Exception Logging");
+		});
 	});

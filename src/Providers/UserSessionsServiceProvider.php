@@ -64,19 +64,22 @@ class UserSessionsServiceProvider extends ServiceProvider
         //publish all
         $this->publishes([
         // Config
-        __DIR__.'/../../config/user-sessions.php' =>
-            config_path('user-sessions.php'),
+        // __DIR__.'/../../config/user-sessions.php' =>
+        //     config_path('user-sessions.php'),
 
-        __DIR__.'/../../config/activitylog.php' =>
-            config_path('activitylog.php'),
+        // __DIR__.'/../../config/activitylog.php' =>
+        //     config_path('activitylog.php'),
+        __DIR__.'/../../config' =>
+            config_path('config'),    
 
         // Controllers
-        __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
-            app_path('Http/Controllers/ChangePasswordController.php'),
+        // __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
+        //     app_path('Http/Controllers/ChangePasswordController.php'),
                 
-        __DIR__.'/../../stubs/controllers' =>
-            app_path('Http/Controllers/UserSessions'),
+        // __DIR__.'/../../stubs/controllers' =>
+        //     app_path('Http/Controllers/UserSessions'),
 
+        __DIR__.'/../../stubs/controllers' => app_path('Http/Controllers'),
 
 
         // model
@@ -89,11 +92,12 @@ class UserSessionsServiceProvider extends ServiceProvider
 
 
         // Views
-        __DIR__.'/../../stubs/views' =>
-            resource_path('views/user-sessions'),
+        // __DIR__.'/../../stubs/views' =>
+        //     resource_path('views/user-sessions'),
 
-         __DIR__.'/../../stubs/views/auth/change-password.blade.php' =>
-            resource_path('views/auth/change-password.blade.php'),
+        //  __DIR__.'/../../stubs/views/auth/change-password.blade.php' =>
+        //     resource_path('views/auth/change-password.blade.php'),
+        __DIR__.'/../../stubs/views' => resource_path('views'),    
 
         // Routes
         __DIR__.'/../../stubs/routes/user-sessions.php' =>
