@@ -17,6 +17,13 @@ Or install the latest development version:
 ```bash
 composer require delickate/user-sessions:dev-main --prefer-source
 ```
+
+#### Pushlish files
+
+```bash
+> php artisan vendor:publish --tag=user-sessions  --force
+```
+
 #### Remove / Uninstall
 
 To uninstall the package:
@@ -154,7 +161,7 @@ Open App\Exceptions\Handler.php file and update it like this
 use App\Models\ExceptionLog;
 use Throwable;
 
-public function register()
+    public function register()
     {
         $this->reportable(function (Throwable $e) {
                 try {
@@ -172,6 +179,18 @@ public function register()
                 // Prevent infinite loop if DB logging fails
             }
         });
+    }
+
+    //SANI: show 500 error on exception
+    public function render($request, Throwable $e)
+    {
+        
+        if (app()->environment('production')) 
+        {
+            return response()->view('errors.500', [], 500);
+        }
+
+        return parent::render($request, $e);
     }
 ```
 
