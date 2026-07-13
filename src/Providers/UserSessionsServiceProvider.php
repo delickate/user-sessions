@@ -175,7 +175,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         // Save only what we can get from query
         DbAuditLog::create([
             'user_id' => $userId,
-            'user_session_id' => $session?->id,
+            'user_session_id' => ($session ? $session->id : null),
             'connection' => $query->connectionName,
             'operation' => $operation,
             'table_name' => $table,
@@ -189,12 +189,19 @@ class UserSessionsServiceProvider extends ServiceProvider
 
     protected function extractTableName($sql, $operation)
     {
-        return match ($operation) {
-            'insert' => preg_replace('/insert into\s+([^\s]+)/', '$1', $sql),
-            'update' => preg_replace('/update\s+([^\s]+)/', '$1', $sql),
-            'delete' => preg_replace('/delete from\s+([^\s]+)/', '$1', $sql),
-            default => null,
-        };
+        switch ($operation) {
+            case 'insert':
+                return preg_replace('/insert into\s+([^\s]+)/i', '$1', $sql);
+
+            case 'update':
+                return preg_replace('/update\s+([^\s]+)/i', '$1', $sql);
+
+            case 'delete':
+                return preg_replace('/delete from\s+([^\s]+)/i', '$1', $sql);
+
+            default:
+                return null;
+        }
     }
 
 
