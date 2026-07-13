@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * --------------------------------------------------------------------------
  * Delickate User Sessions Package
@@ -17,23 +17,15 @@
  */
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ModelChangeLog extends Model
+class PasswordHistory extends Model
 {
-    protected $table = 'user_audit_logs';
-    
-    protected $fillable = [
-        'user_session_id',
-        'user_id',
-        'model_type',
-        'model_id',
-        'before',
-        'after',
-    ];
+    use HasFactory;
 
-    protected $casts = [
-        'before' => 'array',
-        'after' => 'array',
+    protected $fillable = [
+        'user_id',
+        'password',
     ];
 }

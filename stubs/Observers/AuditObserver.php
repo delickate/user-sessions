@@ -1,9 +1,25 @@
 <?php
-
+/**
+ * --------------------------------------------------------------------------
+ * Delickate User Sessions Package
+ * --------------------------------------------------------------------------
+ *
+ * @package     Delickate\UserSessions
+ * @author      Sani Hyne 
+ * @copyright   Copyright (c) 2026 Delickate
+ * @license     MIT
+ * @version     1.0.0
+ * @since       1.0.0
+ *
+ * This file is part of the Delickate User Sessions module.
+ * It provides session tracking, activity logging, and audit features.
+ *
+ */
 namespace App\Observers;
 
 use App\Models\DbAuditLog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class AuditObserver
 {
@@ -59,18 +75,42 @@ class AuditObserver
 
     protected function storeLog($model, string $operation, $before, $after): void
     {
-         $user = auth()->user();
-        $session = \App\Models\UserSessionImplement::where('user_id', $user->id)->latest()->first();
+        $request = request(); 
 
-        \App\Models\DbAuditLog::create([
-            'table_name'  => $model->getTable(),
-            'operation'   => $operation,
-            'before'      => $before,
-            'after'       => $after,
-            'user_id'     => auth()->id(),
-            'user_session_id'  => $session->session_id,
-            'executed_at' => now(),
+        $user = auth()->user();
+
+        $session = \App\Models\UserSessionImplement::where('user_id', $user?->id)
+            ->latest()
+            ->first();
+
+        DbAuditLog::create([
+            'table_name'      => $model->getTable(),
+            'operation'       => $operation,
+            'before'          => $before,
+            'after'           => $after,
+            'user_id'         => auth()->id(),
+            'user_session_id' => $session?->session_id,
+            'executed_at'     => now(),
+
+            // Request data
+            'method'      => $request->method(),
+            'url'         => $request->fullUrl(),
+            'route_name'  => optional($request->route())->getName(),
+            'ip_address'  => $request->ip(),
+            'user_agent'  => $request->userAgent(),
+
+            // Exclude sensitive fields
+            'payload'     => json_encode(
+                $this->cleanPayload($request->except(['password', 'password_confirmation']))
+            ),
         ]);
+    }
+
+    protected function cleanPayload(array $payload): array
+    {
+        unset($payload['_token']);
+
+        return $payload;
     }
 
 }

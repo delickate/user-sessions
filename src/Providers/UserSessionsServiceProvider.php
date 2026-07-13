@@ -1,5 +1,20 @@
 <?php
-
+/**
+ * --------------------------------------------------------------------------
+ * Delickate User Sessions Package
+ * --------------------------------------------------------------------------
+ *
+ * @package     Delickate\UserSessions
+ * @author      Sani Hyne 
+ * @copyright   Copyright (c) 2026 Delickate
+ * @license     MIT
+ * @version     1.0.0
+ * @since       1.0.0
+ *
+ * This file is part of the Delickate User Sessions module.
+ * It provides session tracking, activity logging, and audit features.
+ *
+ */
 namespace Delickate\UserSessions\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -49,17 +64,25 @@ class UserSessionsServiceProvider extends ServiceProvider
         //publish all
         $this->publishes([
         // Config
-        __DIR__.'/../../config/user-sessions.php' =>
-            config_path('user-sessions.php'),
+        // __DIR__.'/../../config/user-sessions.php' =>
+        //     config_path('user-sessions.php'),
 
-        __DIR__.'/../../config/activitylog.php' =>
-            config_path('activitylog.php'),
-
-        // Controllers
-        __DIR__.'/../../stubs/controllers' =>
-            app_path('Http/Controllers/UserSessions'),
+        // __DIR__.'/../../config/activitylog.php' =>
+        //     config_path('activitylog.php'),
+        __DIR__.'/../../config' =>
+            config_path('/'),    
 
         // Controllers
+        // __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
+        //     app_path('Http/Controllers/ChangePasswordController.php'),
+                
+        // __DIR__.'/../../stubs/controllers' =>
+        //     app_path('Http/Controllers/UserSessions'),
+
+        __DIR__.'/../../stubs/controllers' => app_path('Http/Controllers'),
+
+
+        // model
         __DIR__.'/../../stubs/models' =>
             app_path('Models'),
 
@@ -69,8 +92,12 @@ class UserSessionsServiceProvider extends ServiceProvider
 
 
         // Views
-        __DIR__.'/../../stubs/views' =>
-            resource_path('views/user-sessions'),
+        // __DIR__.'/../../stubs/views' =>
+        //     resource_path('views/user-sessions'),
+
+        //  __DIR__.'/../../stubs/views/auth/change-password.blade.php' =>
+        //     resource_path('views/auth/change-password.blade.php'),
+        __DIR__.'/../../stubs/views' => resource_path('views'),    
 
         // Routes
         __DIR__.'/../../stubs/routes/user-sessions.php' =>
@@ -130,14 +157,26 @@ class UserSessionsServiceProvider extends ServiceProvider
         // }
 
 
-        // foreach (config('user-sessions.models', []) as $model) 
-        // {
-        //     $model::observe(ModelObserver::class);
+        // foreach (config('activitylog.models', []) as $modelClass) {
+        //     $modelClass::observe(\App\Observers\AuditObserver::class);
         // }
 
-        DB::listen(function ($query) {
-            $this->logQuery($query);
-        });
+        $observerClass = \App\Observers\AuditObserver::class;
+
+        if (class_exists($observerClass)) {
+            foreach (config('activitylog.models', []) as $modelClass) {
+                if (class_exists($modelClass)) {
+                    $modelClass::observe($observerClass);
+                }
+            }
+        }
+
+
+        // DB::listen(function ($query) {
+        //     $this->logQuery($query);
+        // });
+
+        
     }
 
     protected function logQuery($query)

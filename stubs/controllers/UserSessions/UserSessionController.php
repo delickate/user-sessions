@@ -1,13 +1,31 @@
 <?php
-
+/**
+ * --------------------------------------------------------------------------
+ * Delickate User Sessions Package
+ * --------------------------------------------------------------------------
+ *
+ * @package     Delickate\UserSessions
+ * @author      Sani Hyne 
+ * @copyright   Copyright (c) 2026 Delickate
+ * @license     MIT
+ * @version     1.0.0
+ * @since       1.0.0
+ *
+ * This file is part of the Delickate User Sessions module.
+ * It provides session tracking, activity logging, and audit features.
+ *
+ */
 namespace App\Http\Controllers\UserSessions;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserSessionImplement;
+
 
 use Illuminate\Http\Request;
-use App\Models\UserSessionActivityImplement;
 use App\Models\User;
+use App\Models\UserSessionImplement;
+use App\Models\UserSessionActivityImplement;
+use App\Models\DbAuditLog;
+
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -25,17 +43,17 @@ class UserSessionController extends Controller
             $date = Carbon::today()->toDateString();
         }
 
-        $query = UserSessionActivityImplement::with('user')->where(function($q) use ($date) {
+        $query = UserSessionImplement::with('user')->where(function($q) use ($date) {
             // match rows with created_at on that date OR rows where hit_at (unix) matches that date
             $q->whereDate('created_at', $date)
-              ->orWhereRaw('DATE(FROM_UNIXTIME(`hit_at`)) = ?', [$date]);
+              ->orWhereRaw('DATE(FROM_UNIXTIME(`created_at`)) = ?', [$date]);
         });
 
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->query('user_id'));
         }
 
-        $sessions = $query->orderByRaw('COALESCE(created_at, FROM_UNIXTIME(hit_at)) DESC')
+        $sessions = $query->orderByRaw('COALESCE(created_at, FROM_UNIXTIME(created_at)) DESC')
                           ->paginate(20)
                           ->appends($request->query());
 
@@ -69,5 +87,17 @@ class UserSessionController extends Controller
             ->appends($request->query());
 
         return view('user-sessions.activities', compact('session', 'activities'));
+    }
+
+    public function auditLogs($session_id)
+    {
+        $session = UserSessionImplement::where('session_id', $session_id)
+                        ->firstOrFail();
+
+        $auditLogs = DbAuditLog::where('user_session_id', $session_id)
+                        ->latest()
+                        ->paginate(20);
+
+        return view('user-sessions.audit-logs', compact('session', 'auditLogs'));
     }
 }
