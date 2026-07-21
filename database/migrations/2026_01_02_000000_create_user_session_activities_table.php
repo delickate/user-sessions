@@ -11,11 +11,11 @@ class CreateUserSessionActivitiesTable extends Migration
         Schema::create('user_session_activities', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_session_id')->index();
+            $table->string('user_session_id')->nullable();
             $table->unsignedBigInteger('user_id')->index();
 
-            $table->string('method', 10);
-            $table->string('url');
+            $table->string('method', 10)->nullable();
+            $table->string('url')->nullable();
             $table->string('route_name')->nullable();
 
             $table->json('payload')->nullable();
@@ -24,7 +24,7 @@ class CreateUserSessionActivitiesTable extends Migration
             $table->text('user_agent')->nullable();
 
             
-            $table->timestamp('hit_at');
+            $table->timestamp('hit_at')->nullable();
 
             $table->timestamps();
         });

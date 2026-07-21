@@ -1,5 +1,20 @@
 <?php
-
+/**
+ * --------------------------------------------------------------------------
+ * Delickate User Sessions Package
+ * --------------------------------------------------------------------------
+ *
+ * @package     Delickate\UserSessions
+ * @author      Sani Hyne 
+ * @copyright   Copyright (c) 2026 Delickate
+ * @license     MIT
+ * @version     1.0.0
+ * @since       1.0.0
+ *
+ * This file is part of the Delickate User Sessions module.
+ * It provides session tracking, activity logging, and audit features.
+ *
+ */
 namespace Delickate\UserSessions\Providers;
 
 use Illuminate\Support\ServiceProvider;
@@ -15,7 +30,7 @@ use App\Http\Middleware\LogUserActivityImplement;
 use Illuminate\Support\Facades\DB;
 use App\Models\UserSessionImplement;
 use App\Models\DbAuditLog;
-use Delickate\UserSessions\Observers\AuditObserver;
+//use Delickate\UserSessions\Observers\AuditObserver;
 use App\Http\Middleware\StoreUserSessionIdImplement;
 
 
@@ -49,17 +64,25 @@ class UserSessionsServiceProvider extends ServiceProvider
         //publish all
         $this->publishes([
         // Config
-        __DIR__.'/../../config/user-sessions.php' =>
-            config_path('user-sessions.php'),
+        // __DIR__.'/../../config/user-sessions.php' =>
+        //     config_path('user-sessions.php'),
 
-        __DIR__.'/../../config/activitylog.php' =>
-            config_path('activitylog.php'),
-
-        // Controllers
-        __DIR__.'/../../stubs/controllers' =>
-            app_path('Http/Controllers/UserSessions'),
+        // __DIR__.'/../../config/activitylog.php' =>
+        //     config_path('activitylog.php'),
+        __DIR__.'/../../config' =>
+            config_path('/'),    
 
         // Controllers
+        // __DIR__.'/../../stubs/controllers/ChangePasswordController.php' =>
+        //     app_path('Http/Controllers/ChangePasswordController.php'),
+                
+        // __DIR__.'/../../stubs/controllers' =>
+        //     app_path('Http/Controllers/UserSessions'),
+
+        __DIR__.'/../../stubs/controllers' => app_path('Http/Controllers'),
+
+
+        // model
         __DIR__.'/../../stubs/models' =>
             app_path('Models'),
 
@@ -69,12 +92,21 @@ class UserSessionsServiceProvider extends ServiceProvider
 
 
         // Views
-        __DIR__.'/../../stubs/views' =>
-            resource_path('views/user-sessions'),
+        // __DIR__.'/../../stubs/views' =>
+        //     resource_path('views/user-sessions'),
+
+        //  __DIR__.'/../../stubs/views/auth/change-password.blade.php' =>
+        //     resource_path('views/auth/change-password.blade.php'),
+        __DIR__.'/../../stubs/views' => resource_path('views'),    
 
         // Routes
         __DIR__.'/../../stubs/routes/user-sessions.php' =>
             base_path('routes/user-sessions.php'),
+
+        //observer
+        __DIR__.'/../../stubs/Observers/AuditObserver.php' =>
+            app_path('Observers/AuditObserver.php'),
+
 
     ], 'user-sessions');
         
@@ -117,22 +149,34 @@ class UserSessionsServiceProvider extends ServiceProvider
 
         // Query listener for audit logs
 
-        foreach (config('user-sessions.audit_models', []) as $modelClass) 
-        {
-            if (class_exists($modelClass)) {
-                $modelClass::observe(AuditObserver::class);
+        // foreach (config('user-sessions.audit_models', []) as $modelClass) 
+        // {
+        //     if (class_exists($modelClass)) {
+        //         $modelClass::observe(AuditObserver::class);
+        //     }
+        // }
+
+
+        // foreach (config('activitylog.models', []) as $modelClass) {
+        //     $modelClass::observe(\App\Observers\AuditObserver::class);
+        // }
+
+        $observerClass = \App\Observers\AuditObserver::class;
+
+        if (class_exists($observerClass)) {
+            foreach (config('activitylog.models', []) as $modelClass) {
+                if (class_exists($modelClass)) {
+                    $modelClass::observe($observerClass);
+                }
             }
         }
 
 
-        // foreach (config('user-sessions.models', []) as $model) 
-        // {
-        //     $model::observe(ModelObserver::class);
-        // }
-
         // DB::listen(function ($query) {
         //     $this->logQuery($query);
         // });
+
+        
     }
 
     protected function logQuery($query)
@@ -170,7 +214,7 @@ class UserSessionsServiceProvider extends ServiceProvider
         // Save only what we can get from query
         DbAuditLog::create([
             'user_id' => $userId,
-            'user_session_id' => $session?->id,
+            'user_session_id' => ($session ? $session->id : null),
             'connection' => $query->connectionName,
             'operation' => $operation,
             'table_name' => $table,
@@ -184,12 +228,19 @@ class UserSessionsServiceProvider extends ServiceProvider
 
     protected function extractTableName($sql, $operation)
     {
-        return match ($operation) {
-            'insert' => preg_replace('/insert into\s+([^\s]+)/', '$1', $sql),
-            'update' => preg_replace('/update\s+([^\s]+)/', '$1', $sql),
-            'delete' => preg_replace('/delete from\s+([^\s]+)/', '$1', $sql),
-            default => null,
-        };
+        switch ($operation) {
+            case 'insert':
+                return preg_replace('/insert into\s+([^\s]+)/i', '$1', $sql);
+
+            case 'update':
+                return preg_replace('/update\s+([^\s]+)/i', '$1', $sql);
+
+            case 'delete':
+                return preg_replace('/delete from\s+([^\s]+)/i', '$1', $sql);
+
+            default:
+                return null;
+        }
     }
 
 

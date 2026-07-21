@@ -11,7 +11,7 @@ class CreateUserSessionModelChangesTable extends Migration
         Schema::create('user_session_model_changes', function (Blueprint $table) {
         $table->id();
 
-        $table->unsignedBigInteger('user_session_id')->index();
+        $table->string('user_session_id')->nullable();
         $table->unsignedBigInteger('user_id')->index();
 
         $table->string('model_type')->nullable();

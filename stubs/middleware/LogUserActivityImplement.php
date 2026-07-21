@@ -1,5 +1,20 @@
 <?php
-
+/**
+ * --------------------------------------------------------------------------
+ * Delickate User Sessions Package
+ * --------------------------------------------------------------------------
+ *
+ * @package     Delickate\UserSessions
+ * @author      Sani Hyne 
+ * @copyright   Copyright (c) 2026 Delickate
+ * @license     MIT
+ * @version     1.0.0
+ * @since       1.0.0
+ *
+ * This file is part of the Delickate User Sessions module.
+ * It provides session tracking, activity logging, and audit features.
+ *
+ */
 namespace App\Http\Middleware;
 
 use Closure;
@@ -20,7 +35,7 @@ class LogUserActivityImplement
 
         $user = auth()->user();
 
-        $session = UserSessionImplement::where('user_id', $user->id)->whereNull('logout_at')->latest()->first();
+        $session = UserSessionImplement::where('user_id', $user->id)->latest()->first();
 
         if (!$session) 
         {
@@ -28,7 +43,7 @@ class LogUserActivityImplement
         }
 
         UserSessionActivityImplement::create([
-            'user_session_id'   => $session->id,
+            'user_session_id'   => $session->session_id,
             'user_id'           => $user->id,
             'method'            => $request->method(),
             'url'               => $request->fullUrl(),
